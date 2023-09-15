@@ -2,7 +2,7 @@ from pyspark.sql import SparkSession
 
 spark = SparkSession.builder.appName("ProductCategory").getOrCreate()
 
-# Создаем датафрейм с Productами и их идентификаторами
+# Create tables
 products = spark.createDataFrame([
     (1, "Product1"),
     (2, "Product2"),
@@ -26,14 +26,8 @@ links = spark.createDataFrame([
     (3, 4),
 ], ["product_id", "id_category"])
 
-# Объединяем Productы и категории по product_id
+# join
 result = links.join(products, on='product_id').join(categories, on="id_category", how="left")
-
-# Выбираем только необходимые столбцы
 result = result.select("product_name", "category_name")
-
-# Выводим результат
 result.show()
-
-# Закрываем SparkSession
 spark.stop()
